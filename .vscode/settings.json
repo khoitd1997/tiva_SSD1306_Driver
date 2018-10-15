@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.cu": "c",
+        "*.tdd": "makefile",
+        "*.cfg": "tcl",
+        "*.svd": "xml",
+        "*.hpp": "cpp",
+        "bit_manipulation.h": "c",
+        "ssd1306.h": "c"
+    }
+}
