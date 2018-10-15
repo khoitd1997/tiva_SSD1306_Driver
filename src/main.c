@@ -31,8 +31,6 @@
 #include "ssd1306.h"
 
 int main(void) {
-  for (uint32_t waitIndex = 0; waitIndex < 5000000; ++waitIndex) {
-  }
   ssd1306Init();
 
   // Enable the GPIO Peripheral used by the UART.
@@ -58,16 +56,15 @@ int main(void) {
 
   UARTprintf("Starting sd1306 test\n");
 
-  //   ssd1306SwitchEntireDisplay(true);
   ssd1306TurnOn();
   for (;;) {
-    // ssd1306SwitchEntireDisplay(true);
-    // ssd1306Switch(true);
-    // ssd1306AdjustContrast(50);
-    for (uint32_t waitIndex = 0; waitIndex < 50000; ++waitIndex) {
+    ssd1306AdjustContrast(0);
+    UARTprintf("New contrast 1\n");
+    for (uint32_t waitIndex = 0; waitIndex < 5000000; ++waitIndex) {
     }
-    // ssd1306AdjustContrast(250);
-    for (uint32_t waitIndex = 0; waitIndex < 50000; ++waitIndex) {
+    ssd1306AdjustContrast(250);
+    UARTprintf("New contrast 2\n");
+    for (uint32_t waitIndex = 0; waitIndex < 5000000; ++waitIndex) {
     }
   }
   return 0;

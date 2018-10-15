@@ -109,7 +109,7 @@ void ssd1306TurnOn(void) {
 }
 
 void ssd1306AdjustContrast(const uint8_t contrastVal) {
-  uint8_t byteList[2] = {0x81};
-  byteList[1] = contrastVal;
-  ssd1306WriteList(COMMAND, byteList, 2);
+  // how multi byte command works
+  ssd1306Write(COMMAND, SSD1306_SETCONTRAST);
+  ssd1306Write(COMMAND, contrastVal);
 }
