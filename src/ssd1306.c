@@ -86,8 +86,8 @@ void ssd1306TurnOn(void) {
   // charge pump
   ssd1306Write(COMMAND, 0x14);
 
-  ssd1306Write(COMMAND, SSD1306_MEMORYMODE); // 0x20
-  ssd1306Write(COMMAND, 0x00);               // 0x0 act like ks0108
+  //   ssd1306Write(COMMAND, SSD1306_MEMORYMODE); // 0x20
+  //   ssd1306Write(COMMAND, 0x00);               // 0x0 act like ks0108
   ssd1306Write(COMMAND, SSD1306_SEGREMAP | 0x1);
   ssd1306Write(COMMAND, SSD1306_COMSCANDEC);
 
@@ -107,16 +107,7 @@ void ssd1306TurnOn(void) {
   ssd1306Write(COMMAND, SSD1306_DEACTIVATE_SCROLL);
 
   ssd1306Switch(true); //--turn on oled panel
-}
 
-void ssd1306AdjustContrast(const uint8_t contrastVal) {
-  // how multi byte command works
-  ssd1306Write(COMMAND, SSD1306_SETCONTRAST);
-  ssd1306Write(COMMAND, contrastVal);
-}
-
-void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
-                 const uint32_t bitmapLen) {
   ssd1306Write(COMMAND, SSD1306_MEMORYMODE);
   ssd1306Write(COMMAND, 0b01);
 
@@ -129,23 +120,33 @@ void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
   ssd1306Write(COMMAND, SSD1306_PAGEADDR);
   ssd1306Write(COMMAND, 0);
   ssd1306Write(COMMAND, 3);
+}
+
+void ssd1306AdjustContrast(const uint8_t contrastVal) {
+  // how multi byte command works
+  ssd1306Write(COMMAND, SSD1306_SETCONTRAST);
+  ssd1306Write(COMMAND, contrastVal);
+}
+
+void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
+                 const uint32_t bitmapLen) {
 
   ssd1306WriteList(GDDRAM_DATA, bitmap, bitmapLen);
 }
 
 void ssd1306ClearDisplay(void) {
-  static const uint8_t clearBuf[512] = {0};
-  ssd1306Draw(0, 0, clearBuf, 512);
+  ssd1306BeginCom(GDDRAM_DATA);
+
+  for (uint32_t index = 0; index < SSD1306_TOTAL_WRITE - 1; ++index) {
+    ssd1306ContinueCom(0);
+  }
+  ssd1306EndCom(0);
 }
 
 void ssd1306PrintString(const char *stringToPrint) {
-  ssd1306WaitBus();
   assert(('\0' != stringToPrint[0]));
 
-  I2CMasterSlaveAddrSet(SSD1306_I2C_BASE, SSD1306_ADDR, false);
-  I2CMasterDataPut(SSD1306_I2C_BASE, GDDRAM_DATA);
-  I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_START);
-  ssd1306WaitMaster();
+  ssd1306BeginCom(GDDRAM_DATA);
 
   uint32_t glyphIndex = 0;
   uint32_t stringIndex = 0;
@@ -154,16 +155,11 @@ void ssd1306PrintString(const char *stringToPrint) {
 
     for (uint32_t bitIndex = 0; bitIndex < descList[glyphIndex].glyphLen;
          ++bitIndex) {
-      I2CMasterDataPut(SSD1306_I2C_BASE,
-                       descList[glyphIndex].glyphBitmap[bitIndex]);
-      I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
-      ssd1306WaitMaster();
+      ssd1306ContinueCom(descList[glyphIndex].glyphBitmap[bitIndex]);
     }
     ++stringIndex;
     if ('\0' == stringToPrint[stringIndex]) {
-      I2CMasterDataPut(SSD1306_I2C_BASE, 0);
-      I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
-      ssd1306WaitMaster();
+      ssd1306EndCom(0);
       break;
     }
   }

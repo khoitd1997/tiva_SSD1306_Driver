@@ -15,4 +15,8 @@ void ssd1306ReadRegList(const uint8_t startRegAddr, uint8_t *recvData,
 void ssd1306WaitMaster(void);
 void ssd1306WaitBus(void);
 
+void ssd1306BeginCom(const Ssd1306ComType comType);
+void ssd1306EndCom(const uint8_t lastByteToSend);
+void ssd1306ContinueCom(const uint8_t dataToSend);
+
 #endif

@@ -115,7 +115,7 @@ int main(void) {
 
   ssd1306ClearDisplay();
   //   ssd1306Draw(0, 0, rawFont, 512);
-  ssd1306PrintString("A B C D E");
+  ssd1306PrintString("ABCD E");
   for (;;) {
     ssd1306AdjustContrast(0);
     UARTprintf("New contrast 1\n");

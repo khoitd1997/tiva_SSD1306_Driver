@@ -44,6 +44,27 @@ void ssd1306Write(const Ssd1306ComType comType, const uint8_t dataByte) {
   ssd1306WaitBus();
 }
 
+void ssd1306BeginCom(const Ssd1306ComType comType) {
+  ssd1306WaitBus();
+  I2CMasterSlaveAddrSet(SSD1306_I2C_BASE, SSD1306_ADDR, false);
+  I2CMasterDataPut(SSD1306_I2C_BASE, comType);
+  I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+  ssd1306WaitMaster();
+}
+
+void ssd1306EndCom(const uint8_t lastByteToSend) {
+  I2CMasterDataPut(SSD1306_I2C_BASE, lastByteToSend);
+  I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+  ssd1306WaitMaster();
+  ssd1306WaitBus();
+}
+
+void ssd1306ContinueCom(const uint8_t dataToSend) {
+  I2CMasterDataPut(SSD1306_I2C_BASE, dataToSend);
+  I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+  ssd1306WaitMaster();
+}
+
 void ssd1306WriteList(const Ssd1306ComType comType, const uint8_t dataByte[],
                       const uint32_t totalByte) {
   assert(totalByte > 1);
