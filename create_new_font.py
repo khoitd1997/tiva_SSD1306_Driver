@@ -14,6 +14,9 @@ destFileName = "oled_font.c"
 def createSourceFontFile():
         foundOpen = False
         foundFirstChar = False
+        newestFoundWidth = 0
+        widthPattern = re.compile(".*Width: ([0-9]*) \*/")
+
         try:
                 processedFontFile = open(fontSourceFileName, 'w')
 
@@ -24,7 +27,7 @@ def createSourceFontFile():
                 if(foundOpen):
                         searchResult = re.search("\s*};\s*", line)
                         if(searchResult != None):
-                                processedFontFile.write("]]")
+                                processedFontFile.write("]}]")
                                 processedFontFile.close()
                                 break
 
@@ -33,14 +36,18 @@ def createSourceFontFile():
                         tempLine = re.sub("\w*//.*", "", tempLine)  # delete all c comments
 
                         # change c array to sub list
+                        widthResult = widthPattern.match(line)
+                        if(widthResult != None):
+                                newestFoundWidth = int(widthResult.group(1))
+
                         if(foundFirstChar):
-                                tempLine = re.sub("/\*", "]#", tempLine)
-                                tempLine = re.sub("\*/", "\n,[", tempLine)
+                                tempLine = re.sub("/\*", "]}#", tempLine)
+                                tempLine = re.sub("\*/", "\n,{ \"length\": " + str(newestFoundWidth) + ", \n\"bitmap\": [", tempLine)
                         else:
                                 searchResult = re.search("/\*", line)
                                 if(searchResult != None):
                                         tempLine = re.sub("/\*", "#", tempLine)
-                                        tempLine = re.sub("\*/", "\n[", tempLine)
+                                        tempLine = re.sub("\*/", "\n{ \"length\": " + str(newestFoundWidth) + ", \n\"bitmap\": [", tempLine)
                                         foundFirstChar = True
 
                         processedFontFile.write(tempLine)
@@ -57,29 +64,46 @@ def makeCHeaderFile():
         import font_source as ft
 
         BITS_PER_COLUMN = 8
-        TOTAL_PAGE = 4
+        TOTAL_PAGE = 2
+        # BIGGEST_PIXEL_WIDTH = 8
+        MIN_REMOVAL_LEN = 5  # must be at least this long to have empty line removed
 
         tempMatrix = []
         finalList = []
-        for currChar, bitHex in enumerate(ft.bitmapData):
-
+        for currChar, bitDict in enumerate(ft.bitmapData):
                 # build a matrix representation of the character
-                for index in range(0, len(bitHex)):
+                for index in range(0, len(bitDict["bitmap"])):
                         tempMatrix.append([])
-                        print(hex(bitHex[index]))
+                        # print(hex(bitDict["bitmap"][index]))
                         for bitOrder in range(7, -1, -1):
                                 # print(1 << bitOrder)
-                                if (bitHex[index] & (1 << bitOrder)) > 0:
+                                if (bitDict["bitmap"][index] & (1 << bitOrder)) > 0:
                                         tempMatrix[index].append(1)
                                 else:
                                         tempMatrix[index].append(0)
                 # print(tempMatrix)
                 m = np.array(tempMatrix)
                 m = np.transpose(m)
-                print(np.array(tempMatrix))
-                print("")
+                # print(np.array(tempMatrix))
+                print("Before removal: ")
                 print(m)
                 m = m.tolist()
+                lineToRemove = []
+
+                # remove blank line
+                if(bitDict["length"] >= MIN_REMOVAL_LEN):
+                        for currPosition, vertLine in enumerate(m):
+                                print(currPosition)
+
+                                if (all(bit == 0 for bit in vertLine)):
+                                        # if (((currPosition < len(m)-1) and (all(bit == 0 for bit in m[currPosition + 1]))) or ((currPosition > 0 and (all(bit == 0 for  bit in m[currPosition - 1])))) or (currPosition == len(m)-1) or (currPosition == 0)):
+                                        lineToRemove.append(currPosition)
+                        lineToRemove.sort(reverse= True)
+                        for index in lineToRemove:
+                                del m[index]
+
+                print("After removal: ")
+                print(m)
 
                 finalList.append([])
 
@@ -105,10 +129,10 @@ def makeCHeaderFile():
 
         try:
                 currDir = os.path.dirname(os.path.abspath(__file__))
-                print(currDir)
+                # print(currDir)
                 relDir = destFolder + "/" + destFileName
                 finalPath = os.path.join(currDir, relDir)
-                print(finalPath)
+                # print(finalPath)
                 cHeaderFile = open(finalPath, 'w')
 
         except:
