@@ -29,6 +29,8 @@
 #include "tiva_utils/bit_manipulation.h"
 
 #include "ssd1306.h"
+#include "ssd1306_info.h"
+#include "ssd1306_utils.h"
 
 #include "oled_font.h"
 
@@ -114,8 +116,9 @@ int main(void) {
   ssd1306TurnOn();
 
   ssd1306ClearDisplay();
-  //   ssd1306Draw(0, 0, rawFont, 512);
-  ssd1306PrintString("ABCD E");
+
+  ssd1306PrintString("ABCDEFGHIJKLMNOP", 0);
+  ssd1306PrintString("QRSTVXYZ", 1);
   for (;;) {
     ssd1306AdjustContrast(0);
     UARTprintf("New contrast 1\n");

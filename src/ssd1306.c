@@ -113,13 +113,13 @@ void ssd1306TurnOn(void) {
 
   ssd1306Write(COMMAND, SSD1306_SETLOWCOLUMN);
   ssd1306Write(COMMAND, SSD1306_SETHIGHCOLUMN | 0);
-  //   ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
-  //   ssd1306Write(COMMAND, 0);
-  //   ssd1306Write(COMMAND, 127);
+  ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
+  ssd1306Write(COMMAND, 0);
+  ssd1306Write(COMMAND, 127);
 
   ssd1306Write(COMMAND, SSD1306_PAGEADDR);
   ssd1306Write(COMMAND, 0);
-  ssd1306Write(COMMAND, 3);
+  ssd1306Write(COMMAND, 1);
 }
 
 void ssd1306AdjustContrast(const uint8_t contrastVal) {
@@ -135,17 +135,30 @@ void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
 }
 
 void ssd1306ClearDisplay(void) {
-  ssd1306BeginCom(GDDRAM_DATA);
-
-  for (uint32_t index = 0; index < SSD1306_TOTAL_WRITE - 1; ++index) {
-    ssd1306ContinueCom(0);
+  for (uint32_t lineIndex = 0; lineIndex <= SSD1306_MAX_LINE; ++lineIndex) {
+    ssd1306SwitchLine(lineIndex);
+    ssd1306BeginCom(GDDRAM_DATA);
+    for (uint32_t index = 0; index < SSD1306_TOTAL_WRITE - 1; ++index) {
+      ssd1306ContinueCom(0);
+    }
+    ssd1306EndCom(0);
   }
-  ssd1306EndCom(0);
 }
 
-void ssd1306PrintString(const char *stringToPrint) {
+void ssd1306SwitchLine(const uint32_t lineNum) {
+  assert(lineNum <= SSD1306_MAX_LINE);
+  ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
+  ssd1306Write(COMMAND, 0);
+  ssd1306Write(COMMAND, 127);
+  ssd1306Write(COMMAND, SSD1306_PAGEADDR);
+  ssd1306Write(COMMAND, lineNum * 2);
+  ssd1306Write(COMMAND, lineNum * 2 + 1);
+}
+
+void ssd1306PrintString(const char *stringToPrint, const uint32_t lineNum) {
   assert(('\0' != stringToPrint[0]));
 
+  ssd1306SwitchLine(lineNum);
   ssd1306BeginCom(GDDRAM_DATA);
 
   uint32_t glyphIndex = 0;
@@ -162,6 +175,7 @@ void ssd1306PrintString(const char *stringToPrint) {
       ssd1306EndCom(0);
       break;
     }
+    ssd1306ContinueCom(0);
+    ssd1306ContinueCom(0);
   }
-  ssd1306WaitBus();
 }

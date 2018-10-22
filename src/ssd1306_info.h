@@ -91,7 +91,8 @@
 
 #define SSD1306_CONTINUATION_BIT 0x80
 
-// Co bit 0 means only data byte
-// D/C# bit 0 means command otw, go to GDDRAM
+#define SSD1306_BIT_PER_CHAR 8
+#define SSD1306_MAX_CHAR_PER_LINE SSD1306_LCDWIDTH / SSD1306_BIT_PER_CHAR
+#define SSD1306_MAX_LINE 1 // max linenum is 1, starting from 0
 
 #endif

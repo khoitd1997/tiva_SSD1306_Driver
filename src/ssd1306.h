@@ -10,7 +10,8 @@ void ssd1306TurnOn(void);
 void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
                  const uint32_t bitmapLen);
 
+void ssd1306SwitchLine(const uint32_t lineNum);
 void ssd1306ClearDisplay(void);
-void ssd1306PrintString(const char *stringToPrint);
+void ssd1306PrintString(const char *stringToPrint, const uint32_t lineNum);
 void ssd1306SwitchEntireDisplay(const bool ignoreRAM);
 #endif
