@@ -7,7 +7,7 @@ typedef enum { COMMAND = 0b0000000, GDDRAM_DATA = 0b01000000 } Ssd1306ComType;
 
 void ssd1306Write(const Ssd1306ComType comType, const uint8_t dataByte);
 void ssd1306WriteList(const Ssd1306ComType comType, const uint8_t dataByte[],
-                      const uint8_t totalByte);
+                      const uint32_t totalByte);
 
 uint8_t ssd1306ReadReg(const uint8_t regAddr);
 void ssd1306ReadRegList(const uint8_t startRegAddr, uint8_t *recvData,

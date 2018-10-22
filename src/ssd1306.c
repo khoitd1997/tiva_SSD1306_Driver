@@ -28,6 +28,7 @@
 
 #include "tiva_utils/bit_manipulation.h"
 
+#include "oled_font.h"
 #include "ssd1306_info.h"
 #include "ssd1306_utils.h"
 
@@ -112,4 +113,59 @@ void ssd1306AdjustContrast(const uint8_t contrastVal) {
   // how multi byte command works
   ssd1306Write(COMMAND, SSD1306_SETCONTRAST);
   ssd1306Write(COMMAND, contrastVal);
+}
+
+void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
+                 const uint32_t bitmapLen) {
+  ssd1306Write(COMMAND, SSD1306_MEMORYMODE);
+  ssd1306Write(COMMAND, 0b01);
+
+  ssd1306Write(COMMAND, SSD1306_SETLOWCOLUMN);
+  ssd1306Write(COMMAND, SSD1306_SETHIGHCOLUMN | 0);
+  //   ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
+  //   ssd1306Write(COMMAND, 0);
+  //   ssd1306Write(COMMAND, 127);
+
+  ssd1306Write(COMMAND, SSD1306_PAGEADDR);
+  ssd1306Write(COMMAND, 0);
+  ssd1306Write(COMMAND, 3);
+
+  ssd1306WriteList(GDDRAM_DATA, bitmap, bitmapLen);
+}
+
+void ssd1306ClearDisplay(void) {
+  static const uint8_t clearBuf[512] = {0};
+  ssd1306Draw(0, 0, clearBuf, 512);
+}
+
+void ssd1306PrintString(const char *stringToPrint) {
+  ssd1306WaitBus();
+  assert(('\0' != stringToPrint[0]));
+
+  I2CMasterSlaveAddrSet(SSD1306_I2C_BASE, SSD1306_ADDR, false);
+  I2CMasterDataPut(SSD1306_I2C_BASE, GDDRAM_DATA);
+  I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+  ssd1306WaitMaster();
+
+  uint32_t glyphIndex = 0;
+  uint32_t stringIndex = 0;
+  while (1) {
+    glyphIndex = stringToPrint[stringIndex] - CHAR_LIST_OFFSET;
+
+    for (uint32_t bitIndex = 0; bitIndex < descList[glyphIndex].glyphLen;
+         ++bitIndex) {
+      I2CMasterDataPut(SSD1306_I2C_BASE,
+                       descList[glyphIndex].glyphBitmap[bitIndex]);
+      I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+      ssd1306WaitMaster();
+    }
+    ++stringIndex;
+    if ('\0' == stringToPrint[stringIndex]) {
+      I2CMasterDataPut(SSD1306_I2C_BASE, 0);
+      I2CMasterControl(SSD1306_I2C_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+      ssd1306WaitMaster();
+      break;
+    }
+  }
+  ssd1306WaitBus();
 }
