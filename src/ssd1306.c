@@ -109,14 +109,15 @@ void ssd1306TurnOn(void) {
   ssd1306Switch(true); //--turn on oled panel
 
   ssd1306Write(COMMAND, SSD1306_MEMORYMODE);
-  ssd1306Write(COMMAND, 0b01);
+  ssd1306Write(COMMAND, SSD1306_MEMORY_VERTICAL_MODE);
 
   ssd1306Write(COMMAND, SSD1306_SETLOWCOLUMN);
   ssd1306Write(COMMAND, SSD1306_SETHIGHCOLUMN | 0);
   ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
   ssd1306Write(COMMAND, 0);
-  ssd1306Write(COMMAND, 127);
+  ssd1306Write(COMMAND, SSD1306_LCDWIDTH - 1);
 
+  // TODO: refacotr
   ssd1306Write(COMMAND, SSD1306_PAGEADDR);
   ssd1306Write(COMMAND, 0);
   ssd1306Write(COMMAND, 1);
@@ -147,16 +148,29 @@ void ssd1306ClearDisplay(void) {
 
 void ssd1306SwitchLine(const uint32_t lineNum) {
   assert(lineNum <= SSD1306_MAX_LINE);
-  ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
-  ssd1306Write(COMMAND, 0);
-  ssd1306Write(COMMAND, 127);
-  ssd1306Write(COMMAND, SSD1306_PAGEADDR);
-  ssd1306Write(COMMAND, lineNum * 2);
-  ssd1306Write(COMMAND, lineNum * 2 + 1);
+  setColumnRange(0, SSD1306_LCDWIDTH - 1);
+  setPageRange(lineNum * 2, lineNum * 2 + 1);
+}
+
+void ssd1306ShowPic(const uint8_t *picBitmap, const uint32_t startColCoordinate,
+                    const uint32_t endColCoordinate,
+                    const uint32_t startPageCoordinate,
+                    const uint32_t endPageCoordinate) {
+  ssd1306Write(COMMAND, SSD1306_MEMORYMODE);
+  ssd1306Write(COMMAND,
+               SSD1306_MEMORY_HORIZONTAL_MODE); // pic created are in hor mode
+  setColumnRange(startColCoordinate, endColCoordinate);
+  setPageRange(startPageCoordinate, endPageCoordinate);
+  ssd1306WriteList(GDDRAM_DATA, picBitmap,
+                   (endColCoordinate - startColCoordinate + 1) *
+                       (endPageCoordinate - startPageCoordinate + 1));
 }
 
 void ssd1306PrintString(const char *stringToPrint, const uint32_t lineNum) {
   assert(('\0' != stringToPrint[0]));
+
+  ssd1306Write(COMMAND, SSD1306_MEMORYMODE);
+  ssd1306Write(COMMAND, SSD1306_MEMORY_VERTICAL_MODE);
 
   ssd1306SwitchLine(lineNum);
   ssd1306BeginCom(GDDRAM_DATA);

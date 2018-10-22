@@ -10,6 +10,10 @@ void ssd1306TurnOn(void);
 void ssd1306Draw(const uint8_t column, const uint8_t row, const uint8_t *bitmap,
                  const uint32_t bitmapLen);
 
+void ssd1306ShowPic(const uint8_t *picBitmap, const uint32_t startColCoordinate,
+                    const uint32_t endColCoordinate,
+                    const uint32_t startPageCoordinate,
+                    const uint32_t endPageCoordinate);
 void ssd1306SwitchLine(const uint32_t lineNum);
 void ssd1306ClearDisplay(void);
 void ssd1306PrintString(const char *stringToPrint, const uint32_t lineNum);

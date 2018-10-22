@@ -19,4 +19,10 @@ void ssd1306BeginCom(const Ssd1306ComType comType);
 void ssd1306EndCom(const uint8_t lastByteToSend);
 void ssd1306ContinueCom(const uint8_t dataToSend);
 
+void setColumnRange(const uint32_t startColCoordinate,
+                    const uint32_t endColCoordinate);
+
+void setPageRange(const uint32_t startPageCoordinate,
+                  const uint32_t endPageCoordinate);
+
 #endif
