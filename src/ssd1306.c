@@ -70,7 +70,15 @@ void ssd1306Switch(const bool isOn) {
   ssd1306Write(COMMAND, SSD1306_DISPLAY_ON_OFF | (isOn ? 1 : 0));
 }
 
-void ssd1306TurnOn(void) {
+void ssd1306TurnOn(const bool isFirstTime) {
+  if (isFirstTime) {
+    const uint32_t totalWaitClock =
+        SSD1306_WARM_UP_TIME_MS * (SysCtlClockGet()) / 1000;
+    for (uint32_t waitIndex = 0; waitIndex < totalWaitClock; ++waitIndex) {
+      // warm up delay
+    }
+  }
+  
   ssd1306Switch(false);
   ssd1306Write(COMMAND, SSD1306_SETDISPLAYCLOCKDIV);
   ssd1306Write(COMMAND, 0x80);

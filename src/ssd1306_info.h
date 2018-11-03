@@ -99,4 +99,6 @@
 #define SSD1306_MAX_CHAR_PER_LINE (SSD1306_LCDWIDTH / SSD1306_BIT_PER_CHAR)
 #define SSD1306_MAX_LINE 1 // max linenum is 1, starting from 0
 
+#define SSD1306_WARM_UP_TIME_MS 2
+
 #endif
