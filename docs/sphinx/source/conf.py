@@ -12,13 +12,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 import subprocess
 
-subprocess.call('cd ../../.. ; doxygen Doxyfile', shell=True)
-html_extra_path = ['../../']
+
 # -- Project information -----------------------------------------------------
 
 project = u'tiva_ssd1306'
@@ -173,3 +172,6 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
+
+subprocess.call('cd ' + str(os.path.abspath('../../..')) + ' ; doxygen Doxyfile', shell=True)
+html_extra_path = []
