@@ -1,6 +1,0 @@
-<map id="src/oled_font.h" name="src/oled_font.h">
-<area shape="rect" id="node2" href="$ssd1306_8h.html" title="Header file for ssd1306 main driver. " alt="" coords="193,87,297,114"/>
-<area shape="rect" id="node3" href="$main_8c.html" title="Contain example of various features for the ssd1306. " alt="" coords="55,169,138,196"/>
-<area shape="rect" id="node4" href="$ssd1306_8c.html" title="Source file implementing main ssd1306 driver function. " alt="" coords="237,169,341,196"/>
-<area shape="rect" id="node5" href="$oled__font__source__pro_8h_source.html" title="src/oled_font_source\l_pro.h" alt="" coords="25,80,168,121"/>
-</map>
