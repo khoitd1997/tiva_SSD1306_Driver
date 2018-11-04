@@ -11,7 +11,7 @@ Driver for the SSD1306 OLED controller for the TivaC.
 
 ## Docs
 
-[Doxygen Docs for the Driver]()
+[Doxygen Docs for the Driver](https://khoitd1997.github.io/tiva_SSD1306_Driver/)
 
 ## Directory Structure
 
