@@ -23,7 +23,7 @@ void ssd1306Init(void);
 /**
  * @brief Initialize the ssd1306
  *
- * Do things like configure charge pump,
+ * Do things like configure charge pump, and other require settings to starting up the display
  *
  */
 void ssd1306TurnOn(const bool isFirstTime);
@@ -31,7 +31,7 @@ void ssd1306TurnOn(const bool isFirstTime);
 /**
  * @brief Adjust contrast of the OLED screen
  *
- * @param contrastVal The contrast value to be set
+ * @param contrastVal The contrast value to be set, limited up to 255
  */
 void ssd1306AdjustContrast(const uint8_t contrastVal);
 /**

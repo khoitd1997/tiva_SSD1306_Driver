@@ -22,6 +22,7 @@ Driver for the SSD1306 OLED controller for the TivaC.
     - ssd1306: the main driver containing function that user will directly uses
     - main.c: containing a small program serving as example or quick test of the display
 - create_new_font.py: scripts used for automating creation of new c array struct for a font type, need the file path of the raw c font file as first argument and font name as second command line argument, output two files in src/oled_font_font_name.h and src/oled_font_font_name.c
+- docs/: contain doxygen docs
 
 ## External Dependencies
 
