@@ -1,3 +1,13 @@
+/**
+ * @file ssd1306_utils.c
+ * @author Khoi Trinh
+ * @brief Source file implementing utils functions for helping the main SSD1306 functions
+ * @version 0.1
+ * @date 2018-11-03
+ *
+ *
+ */
+
 #include "ssd1306_utils.h"
 
 #include <assert.h>
@@ -65,8 +75,9 @@ void ssd1306ContinueCom(const uint8_t dataToSend) {
   ssd1306WaitMaster();
 }
 
-void ssd1306WriteList(const Ssd1306ComType comType, const uint8_t dataByte[],
-                      const uint32_t totalByte) {
+void ssd1306WriteList(const Ssd1306ComType comType,
+                      const uint8_t        dataByte[],
+                      const uint32_t       totalByte) {
   assert(totalByte > 1);
   ssd1306WaitBus();
 
@@ -100,8 +111,7 @@ void ssd1306WaitBus(void) {
   }
 }
 
-void setColumnRange(const uint32_t startColCoordinate,
-                    const uint32_t endColCoordinate) {
+void setColumnRange(const uint32_t startColCoordinate, const uint32_t endColCoordinate) {
   assert(startColCoordinate <= endColCoordinate);
   assert(endColCoordinate < SSD1306_LCDWIDTH);
 
@@ -110,11 +120,10 @@ void setColumnRange(const uint32_t startColCoordinate,
   ssd1306Write(COMMAND, endColCoordinate);
 }
 
-void setPageRange(const uint32_t startPageCoordinate,
-                  const uint32_t endPageCoordinate) {
+void setPageRange(const uint32_t startPageCoordinate, const uint32_t endPageCoordinate) {
   assert(startPageCoordinate <= endPageCoordinate);
   assert(endPageCoordinate < SSD1306_LCDPAGE);
-  
+
   ssd1306Write(COMMAND, SSD1306_PAGEADDR);
   ssd1306Write(COMMAND, startPageCoordinate);
   ssd1306Write(COMMAND, endPageCoordinate);

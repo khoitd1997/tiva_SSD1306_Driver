@@ -1,3 +1,13 @@
+/**
+ * @file ssd1306_info.h
+ * @author Khoi Trinh
+ * @brief Header file containing various info about the SSD1306
+ * @version 0.1
+ * @date 2018-11-03
+ *
+ *
+ */
+
 #ifndef _SSD1306_INFO_H
 #define _SSD1306_INFO_H
 
@@ -29,12 +39,14 @@
 
 #include "tiva_utils/bit_manipulation.h"
 
+// I2C hardware info
 #define SSD1306_I2C_PERIPH SYSCTL_PERIPH_I2C0
-
 #define SSD1306_I2C_BASE I2C0_BASE
+
+// I2C Register List and Physical info
+
 #define SSD1306_ADDR 0x3C
 
-//
 #define SSD1306_CONTRAST_CMD 0x81
 #define SSD1306_DISPLAY_ON_OFF 0xAE
 #define SSD1306_ENTIRE_DISPLAY_CMD 0xA4
@@ -79,7 +91,6 @@
 #define SSD1306_EXTERNALVCC 0x1
 #define SSD1306_SWITCHCAPVCC 0x2
 
-// Scrolling #defines
 #define SSD1306_ACTIVATE_SCROLL 0x2F
 #define SSD1306_DEACTIVATE_SCROLL 0x2E
 #define SSD1306_SET_VERTICAL_SCROLL_AREA 0xA3
@@ -97,10 +108,11 @@
 
 #define SSD1306_BIT_PER_CHAR 8
 #define SSD1306_MAX_CHAR_PER_LINE (SSD1306_LCDWIDTH / SSD1306_BIT_PER_CHAR)
-#define SSD1306_MAX_LINE 1 // max linenum is 1, starting from 0
+#define SSD1306_MAX_LINE 1  // max linenum is 1, starting from 0
 
-#define SSD1306_CHAR_SPACING 1 // how many columns are each consecutive character separated
+// SSD1306 settings
 
+#define SSD1306_CHAR_SPACING 1  // how many columns are each consecutive character separated
 #define SSD1306_WARM_UP_TIME_MS 2
 
 #endif
