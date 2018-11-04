@@ -11,15 +11,22 @@ destFolder = "src"
 destFileName = "oled_font.c"
 
 
+def createSourceFontFile() -> int:
+        foundOpen = False # indicate if the beginning of c source array is found
+        foundFirstChar = False # whether first character in the c header file is found
+        newestFoundWidth = 0 # width of the most recent character, used for building the dict
         firstCharFound = 0 # ascii of the name of first char found(ie 97 for a)
+
+        widthPattern = re.compile(".*Width: ([0-9]*) \*/") # find character width in c comment
         charNamePattern =  re.compile(".*Unicode: U\+([0-9]*).*\*/") # find character name in a c comment
 
+        # create scratch file to store bit map
         try:
                 processedFontFile = open(fontSourceFileName, 'w')
-
         except:
             print("Can't create new files")
             sys.exit(0)  # quit Python
+
         for line in fileinput.input():
                 if(foundOpen):
                         searchResult = re.search("\s*};\s*", line)
@@ -32,12 +39,12 @@ destFileName = "oled_font.c"
                         tempLine = re.sub("{", "", tempLine)
                         tempLine = re.sub("\w*//.*", "", tempLine)  # delete all c comments
 
-                        # change c array to sub list
                         widthResult = widthPattern.match(line)
                         if(widthResult != None):
                                 newestFoundWidth = int(widthResult.group(1))
 
                         if(foundFirstChar):
+                                # start creating opening of python dict
                                 tempLine = re.sub("/\*", "]}#", tempLine)
                                 tempLine = re.sub("\*/", "\n,{ \"length\": " + str(newestFoundWidth) + ", \n\"bitmap\": [", tempLine)
                         else:
@@ -53,6 +60,7 @@ destFileName = "oled_font.c"
 
                         processedFontFile.write(tempLine)
 
+                # check for beginning of c array
                 if(False == foundOpen):
                         searchResult = re.search("\s*static const uint8_t source_code_pro_oled_glyph_bitmap\[\] =\s*", line)
                         if(searchResult != None):
@@ -67,7 +75,6 @@ def makeCHeaderFile(firstCharFound: int):
 
         BITS_PER_COLUMN = 8
         TOTAL_PAGE = 2
-        # BIGGEST_PIXEL_WIDTH = 8
         MIN_REMOVAL_LEN = 5  # must be at least this long to have empty line removed
 
         tempMatrix = []
@@ -92,13 +99,12 @@ def makeCHeaderFile(firstCharFound: int):
                 m = m.tolist()
                 lineToRemove = []
 
-                # remove blank line
+                # remove blank line to make character look consistent
                 if(bitDict["length"] >= MIN_REMOVAL_LEN):
                         for currPosition, vertLine in enumerate(m):
                                 print(currPosition)
 
                                 if (all(bit == 0 for bit in vertLine)):
-                                        # if (((currPosition < len(m)-1) and (all(bit == 0 for bit in m[currPosition + 1]))) or ((currPosition > 0 and (all(bit == 0 for  bit in m[currPosition - 1])))) or (currPosition == len(m)-1) or (currPosition == 0)):
                                         lineToRemove.append(currPosition)
                         lineToRemove.sort(reverse= True)
                         for index in lineToRemove:
@@ -141,6 +147,7 @@ def makeCHeaderFile(firstCharFound: int):
                 print("Can't create new files\n")
                 sys.exit(0)
 
+        # start writing to the c header file
         cHeaderFile.write("#include \"oled_font.h\"\n")
         cHeaderFile.write("#include <stdint.h>\n")
         cHeaderFile.write("\n")
