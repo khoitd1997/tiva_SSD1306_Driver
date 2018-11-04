@@ -26,7 +26,6 @@
 
 #include "driverlib/uart.h"
 
-#include "tiva_utils/bit_manipulation.h"
 
 #include "oled_font.h"
 #include "ssd1306_info.h"
@@ -154,7 +153,8 @@ void ssd1306PrintPic(const uint8_t *picBitmap,
 
 void ssd1306PrintString(const char *   stringToPrint,
                         const uint32_t lineNum,
-                        const uint32_t startCol) {
+                        const uint32_t startCol,
+                        const fontSetDesc fontSet) {
   assert(('\0' != stringToPrint[0]));
 
   // write char bit map vertically
@@ -167,10 +167,10 @@ void ssd1306PrintString(const char *   stringToPrint,
   uint32_t glyphIndex  = 0;
   uint32_t stringIndex = 0;
   while (1) {
-    glyphIndex = stringToPrint[stringIndex] - CHAR_LIST_OFFSET;
+    glyphIndex = stringToPrint[stringIndex] - fontSet.charOffset;
 
-    for (uint32_t bitIndex = 0; bitIndex < descList[glyphIndex].glyphLen; ++bitIndex) {
-      ssd1306ContinueCom(descList[glyphIndex].glyphBitmap[bitIndex]);
+    for (uint32_t bitIndex = 0; bitIndex < fontSet.descList[glyphIndex].glyphLen; ++bitIndex) {
+      ssd1306ContinueCom(fontSet.descList[glyphIndex].glyphBitmap[bitIndex]);
     }
     ++stringIndex;
     if ('\0' == stringToPrint[stringIndex]) {

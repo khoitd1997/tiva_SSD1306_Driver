@@ -1,7 +1,10 @@
-#include "oled_font.h"
+#include "oled_font_source_pro.h"
 #include <stdint.h>
 
-const fontDescList descList[TOTAL_CHAR] = {
+#define TOTAL_CHAR 95
+#define CHAR_LIST_OFFSET 32
+
+const fontDescList source_pro[TOTAL_CHAR] = {
 {.glyphLen = 16, .glyphBitmap=(uint8_t[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}, //   
 {.glyphLen = 16, .glyphBitmap=(uint8_t[]){62, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}, // ! 
 {.glyphLen = 8, .glyphBitmap=(uint8_t[]){30, 0, 6, 0, 30, 0, 6, 0}}, // " 
@@ -98,4 +101,10 @@ const fontDescList descList[TOTAL_CHAR] = {
 {.glyphLen = 10, .glyphBitmap=(uint8_t[]){2, 8, 2, 8, 6, 12, 224, 0, 64, 0}}, // } 
 {.glyphLen = 12, .glyphBitmap=(uint8_t[]){64, 0, 32, 0, 32, 0, 64, 0, 64, 0, 32, 0}}, // ~ 
 
+};
+
+const fontSetDesc source_pro_set = {
+	.totalChar = TOTAL_CHAR,
+	.charOffset = CHAR_LIST_OFFSET,
+	.descList = source_pro, 
 };

@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "oled_font.h"
+
 void ssd1306Init(void);
 void ssd1306TurnOn(const bool isFirstTime);
 
@@ -13,7 +15,10 @@ void ssd1306PrintPic(const uint8_t *picBitmap, const uint32_t startColCoordinate
                     const uint32_t endColCoordinate,
                     const uint32_t startPageCoordinate,
                     const uint32_t endPageCoordinate);
-void ssd1306PrintString(const char *stringToPrint, const uint32_t lineNum, const uint32_t startCol);
+void ssd1306PrintString(const char *   stringToPrint,
+                        const uint32_t lineNum,
+                        const uint32_t startCol,
+                        const fontSetDesc fontSet);
 
 void ssd1306SwitchDisplay(const bool isOn);
 void ssd1306SwitchLine(const uint32_t lineNum);
