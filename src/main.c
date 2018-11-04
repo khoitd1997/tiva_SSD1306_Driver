@@ -33,6 +33,7 @@
 #include "ssd1306_utils.h"
 
 #include "oled_font.h"
+#include "oled_font_source_pro.h"
 
 static uint8_t testPic[] = {
     // 'monochrome_1_resized', 128x32px
@@ -121,8 +122,9 @@ int main(void) {
   ssd1306ClearDisplay();
 
 //   ssd1306PrintPic(testPic, 0, 127, 0, 0);
-    ssd1306PrintString("ABCDE", 0, 0);
+    ssd1306PrintString("ABCDE14321L", 0, 0, source_pro_set);
 //     ssd1306PrintString("QRSTVXYZ,./[];'", 1,0);
+
   for (;;) {
     ssd1306AdjustContrast(0);
     UARTprintf("New contrast 1\n");
