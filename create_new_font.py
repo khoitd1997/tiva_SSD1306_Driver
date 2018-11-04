@@ -11,11 +11,8 @@ destFolder = "src"
 destFileName = "oled_font.c"
 
 
-def createSourceFontFile():
-        foundOpen = False
-        foundFirstChar = False
-        newestFoundWidth = 0
-        widthPattern = re.compile(".*Width: ([0-9]*) \*/")
+        firstCharFound = 0 # ascii of the name of first char found(ie 97 for a)
+        charNamePattern =  re.compile(".*Unicode: U\+([0-9]*).*\*/") # find character name in a c comment
 
         try:
                 processedFontFile = open(fontSourceFileName, 'w')
@@ -46,6 +43,10 @@ def createSourceFontFile():
                         else:
                                 searchResult = re.search("/\*", line)
                                 if(searchResult != None):
+                                        firstCharSearchRes = charNamePattern.match(line)
+                                        if(firstCharSearchRes != None):
+                                                firstCharFound = int(firstCharSearchRes.group(1), 16)
+
                                         tempLine = re.sub("/\*", "#", tempLine)
                                         tempLine = re.sub("\*/", "\n{ \"length\": " + str(newestFoundWidth) + ", \n\"bitmap\": [", tempLine)
                                         foundFirstChar = True
@@ -57,9 +58,10 @@ def createSourceFontFile():
                         if(searchResult != None):
                                 foundOpen = True
                                 processedFontFile.write("bitmapData = [")
+        return firstCharFound
 
 
-def makeCHeaderFile():
+def makeCHeaderFile(firstCharFound: int):
         import numpy as np
         import font_source as ft
 
@@ -145,9 +147,10 @@ def makeCHeaderFile():
         cHeaderFile.write("const fontDescList descList[TOTAL_CHAR] = {\n")
         structMember = ""
         for charMoved in finalList:
-                structMember = structMember.join(["{.glyphLen = ", str(len(charMoved)), ", .glyphBitmap=(uint8_t[]){", ', '.join(map(str, charMoved)), "}}, \n"])
+                structMember = structMember.join(["{.glyphLen = ", str(len(charMoved)), ", .glyphBitmap=(uint8_t[]){", ', '.join(map(str, charMoved)), "}}, // " +  chr(firstCharFound) + " \n"])
                 cHeaderFile.write(structMember)
                 structMember = ""
+                firstCharFound += 1
 
         cHeaderFile.write("\n};")
         try:
@@ -158,8 +161,7 @@ def makeCHeaderFile():
 
 
 def main():
-        createSourceFontFile()
-        makeCHeaderFile()
+        makeCHeaderFile(createSourceFontFile())
         os.remove(fontSourceFileName)
 
 
