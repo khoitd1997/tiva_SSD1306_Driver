@@ -9,6 +9,10 @@ Driver for the SSD1306 OLED controller for the TivaC.
 - Variable image size
 - Auxillary features like adjusting constrast, clear display, etc
 
+## Design
+
+This a pretty simple driver, communication with the ssd1306 is detailed in the datasheet and most functions simply follow that. The font creator script was designed to be easy to use and require almost no work to integrate the result.
+
 ## Docs
 
 [Doxygen Docs for the Driver](https://khoitd1997.github.io/tiva_SSD1306_Driver/)
