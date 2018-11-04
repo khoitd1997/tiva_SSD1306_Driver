@@ -150,7 +150,7 @@ void ssd1306WaitBus(void) {
 
 void setColumnRange(const uint32_t startColCoordinate,
                     const uint32_t endColCoordinate) {
-  assert(startColCoordinate < endColCoordinate);
+  assert(startColCoordinate <= endColCoordinate);
   assert(endColCoordinate < SSD1306_LCDWIDTH);
   ssd1306Write(COMMAND, SSD1306_COLUMNADDR);
   ssd1306Write(COMMAND, startColCoordinate);
@@ -159,7 +159,7 @@ void setColumnRange(const uint32_t startColCoordinate,
 
 void setPageRange(const uint32_t startPageCoordinate,
                   const uint32_t endPageCoordinate) {
-  assert(startPageCoordinate < endPageCoordinate);
+  assert(startPageCoordinate <= endPageCoordinate);
   assert(endPageCoordinate < SSD1306_LCDPAGE);
   ssd1306Write(COMMAND, SSD1306_PAGEADDR);
   ssd1306Write(COMMAND, startPageCoordinate);
