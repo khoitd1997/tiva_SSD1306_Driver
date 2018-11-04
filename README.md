@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/tiva-ssd1306-driver/badge/?version=latest)](https://tiva-ssd1306-driver.readthedocs.io/en/latest/?badge=latest)
+
 # tiva_SSD1306_Driver
 
 Driver for the SSD1306 OLED controller for the TivaC.
