@@ -15,7 +15,7 @@ This a pretty simple driver, communication with the ssd1306 is detailed in the d
 
 ## Docs
 
-[Doxygen Docs for the Driver](https://khoitd1997.github.io/tiva_SSD1306_Driver/)
+[Doxygen Docs for the Driver](https://tiva-ssd1306-driver.readthedocs.io/en/latest/)
 
 ## Directory Structure
 
