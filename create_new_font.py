@@ -191,7 +191,7 @@ def makeCFile(firstCharFound: int):
         cSourceFile.write("const fontDescList " + sys.argv[2] + "[TOTAL_CHAR] = {\n")
         structMember = ""
         for charMoved in finalList:
-                structMember = structMember.join(["{.glyphLen = ", str(len(charMoved)), ", .glyphBitmap=(uint8_t[]){", ', '.join(map(str, charMoved)), "}}, // " + chr(firstCharFound) + " \n"])
+                structMember = structMember.join(["{.glyphLen = ", str(len(charMoved)), ", .glyphBitmap=(uint8_t[]){", ', '.join(map(str, charMoved)), "}}, /* " + chr(firstCharFound) + " */ \n"])
                 cSourceFile.write(structMember)
                 structMember = ""
                 firstCharFound += 1
