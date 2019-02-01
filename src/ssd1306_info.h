@@ -11,6 +11,10 @@
 #ifndef _SSD1306_INFO_H
 #define _SSD1306_INFO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -115,4 +119,7 @@
 #define SSD1306_CHAR_SPACING 1  // how many columns are each consecutive character separated
 #define SSD1306_WARM_UP_TIME_MS 2
 
+#ifdef __cplusplus
+}
+#endif
 #endif

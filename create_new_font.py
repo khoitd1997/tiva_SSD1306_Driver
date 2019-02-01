@@ -11,13 +11,13 @@ destFolder = "src"
 
 
 def createSourceFontFile() -> int:
-        foundOpen = False # indicate if the beginning of c source array is found
-        foundFirstChar = False # whether first character in the c header file is found
-        newestFoundWidth = 0 # width of the most recent character, used for building the dict
-        firstCharFound = 0 # ascii of the name of first char found(ie 97 for a)
+        foundOpen = False  # indicate if the beginning of c source array is found
+        foundFirstChar = False  # whether first character in the c header file is found
+        newestFoundWidth = 0  # width of the most recent character, used for building the dict
+        firstCharFound = 0  # ascii of the name of first char found(ie 97 for a)
 
-        widthPattern = re.compile(".*Width: ([0-9]*) \*/") # find character width in c comment
-        charNamePattern =  re.compile(".*Unicode: U\+([0-9]*).*\*/") # find character name in a c comment
+        widthPattern = re.compile(".*Width: ([0-9]*) \*/")  # find character width in c comment
+        charNamePattern = re.compile(".*Unicode: U\+([0-9]*).*\*/")  # find character name in a c comment
 
         # create scratch file to store bit map
         try:
@@ -150,11 +150,17 @@ def makeCFile(firstCharFound: int):
         cHeaderFile.write("#ifndef _OLED_FONT_H_" + (sys.argv[2]).upper() + "\n")
         cHeaderFile.write("#define _OLED_FONT_H_" + (sys.argv[2]).upper() + "\n")
         cHeaderFile.write("" + "\n")
+        cHeaderFile.write("#ifdef __cplusplus" + "\n")
+        cHeaderFile.write("extern \"C\" {" + "\n")
+        cHeaderFile.write("#endif" + "\n")
         cHeaderFile.write("#include <stdint.h>" + "\n")
         cHeaderFile.write('#include "oled_font.h"' + "\n")
         cHeaderFile.write("" + "\n")
         cHeaderFile.write("extern const fontSetDesc " + sys.argv[2] + "_set;" + "\n")
         cHeaderFile.write("" + "\n")
+        cHeaderFile.write("#ifdef __cplusplus" + "\n")
+        cHeaderFile.write("}" + "\n")
+        cHeaderFile.write("#endif" + "\n")
         cHeaderFile.write("#endif" + "\n")
 
         try:
@@ -162,7 +168,6 @@ def makeCFile(firstCharFound: int):
         except:
                 print("Can't close c header file")
                 sys.exit(0)
-
 
         try:
                 currDir = os.path.dirname(os.path.abspath(__file__))
@@ -186,7 +191,7 @@ def makeCFile(firstCharFound: int):
         cSourceFile.write("const fontDescList " + sys.argv[2] + "[TOTAL_CHAR] = {\n")
         structMember = ""
         for charMoved in finalList:
-                structMember = structMember.join(["{.glyphLen = ", str(len(charMoved)), ", .glyphBitmap=(uint8_t[]){", ', '.join(map(str, charMoved)), "}}, // " +  chr(firstCharFound) + " \n"])
+                structMember = structMember.join(["{.glyphLen = ", str(len(charMoved)), ", .glyphBitmap=(uint8_t[]){", ', '.join(map(str, charMoved)), "}}, // " + chr(firstCharFound) + " \n"])
                 cSourceFile.write(structMember)
                 structMember = ""
                 firstCharFound += 1

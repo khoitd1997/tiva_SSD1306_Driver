@@ -11,6 +11,10 @@
 #ifndef _SSD1306_UTILS_H
 #define _SSD1306_UTILS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /**
@@ -83,4 +87,7 @@ void setColumnRange(const uint32_t startColCoordinate, const uint32_t endColCoor
  */
 void setPageRange(const uint32_t startPageCoordinate, const uint32_t endPageCoordinate);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

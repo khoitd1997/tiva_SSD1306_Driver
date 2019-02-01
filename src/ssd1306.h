@@ -10,6 +10,10 @@
 
 #ifndef _SSD_1306_H
 #define _SSD_1306_H
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -81,4 +85,7 @@ void ssd1306SwitchDisplay(const bool isOn);
  */
 void ssd1306SwitchLine(const uint32_t lineNum);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

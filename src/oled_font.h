@@ -10,6 +10,9 @@
 
 #ifndef _OLED_FONT_H
 #define _OLED_FONT_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 
@@ -32,4 +35,7 @@ typedef struct {
   const fontDescList *descList;  //!< Descriptor list containing bitmaps of the characters
 } fontSetDesc;
 
+#ifdef __cplusplus
+}
+#endif
 #endif
