@@ -41,7 +41,7 @@ extern "C" {
 
 #include "driverlib/uart.h"
 
-#include "tiva_utils/bit_manipulation.h"
+#include "bit_manipulation.h"
 
 // I2C hardware info
 #define SSD1306_I2C_PERIPH SYSCTL_PERIPH_I2C0

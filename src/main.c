@@ -36,7 +36,7 @@
 
 #include "utils/uartstdio.h"
 
-#include "tiva_utils/bit_manipulation.h"
+#include "bit_manipulation.h"
 
 #include "ssd1306.h"
 #include "ssd1306_info.h"

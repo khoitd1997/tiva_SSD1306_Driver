@@ -169,6 +169,7 @@ void ssd1306PrintString(const char *      stringToPrint,
   ssd1306Write(COMMAND, SSD1306_MEMORY_VERTICAL_MODE);
 
   ssd1306SwitchLine(lineNum);
+  setColumnRange(startCol, SSD1306_LCDWIDTH - 1);
   ssd1306BeginCom(GDDRAM_DATA);  // write data to GDDRAM mem
 
   uint32_t glyphIndex  = 0;
